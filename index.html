@@ -31,15 +31,33 @@
 
         .visualization-container {
             margin: 2rem 0;
+            width: 100%;
+        }
+
+        .image-wrapper {
+            width: 100%;
+            overflow: hidden;
         }
 
         img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
             display: block;
             margin: 20px auto;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .image-wrapper {
+                text-align: center;
+            }
+            
+            img {
+                max-width: 100%;
+                width: auto;
+            }
         }
 
         .visualization-description {
@@ -68,7 +86,9 @@
         <h1>Normalized Weights Analysis</h1>
         
         <div class="visualization-container">
-            <img src="images/normalized_weights_until_oct8.png" alt="Graph showing normalized weights over time from 2024 to 2025">
+            <div class="image-wrapper">
+                <img src="images/normalized_weights_until_oct8.png" alt="Graph showing normalized weights over time from 2024 to 2025">
+            </div>
             
             <div class="visualization-description">
                 <h2>Time Series Analysis of Normalized Weights</h2>
