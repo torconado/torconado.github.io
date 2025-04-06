@@ -29,6 +29,60 @@
             margin-bottom: 1rem;
         }
 
+        /* Tabs styling */
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #7f8c8d;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            color: #2c3e50;
+        }
+
+        .tab-button.active {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #2c3e50;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .visualization-container {
             margin: 2rem 0;
             width: 100%;
@@ -79,32 +133,90 @@
         .key-insights li {
             margin-bottom: 0.5rem;
         }
+
+        .empty-tab-content {
+            padding: 3rem;
+            text-align: center;
+            color: #7f8c8d;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Normalized Weights Analysis</h1>
+        <h1>Data Visualization Analysis</h1>
         
-        <div class="visualization-container">
-            <div class="image-wrapper">
-                <img src="images/normalized_weights_until_oct8.png" alt="Graph showing normalized weights over time from 2024 to 2025">
-            </div>
-            
-            <div class="visualization-description">
-                <h2>Time Series Analysis of Normalized Weights</h2>
-                <p>This visualization tracks the evolution of normalized weights across different entities from 2024 to 2025, with particular focus on entities 1810, 9988, and 700.</p>
-            </div>
+        <!-- Tab buttons -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'tab1')">FXI</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2')">Tab 2</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3')">Tab 3</button>
+        </div>
+        
+        <!-- Tab 1 Content (FXI) -->
+        <div id="tab1" class="tab-content active">
+            <h2>Normalized Weights Analysis</h2>
+            <div class="visualization-container">
+                <div class="image-wrapper">
+                    <img src="images/normalized_weights_until_oct8.png" alt="Graph showing normalized weights over time from 2024 to 2025">
+                </div>
+                
+                <div class="visualization-description">
+                    <h2>Time Series Analysis of Normalized Weights</h2>
+                    <p>This visualization tracks the evolution of normalized weights across different entities from 2024 to 2025, with particular focus on entities 1810, 9988, and 700.</p>
+                </div>
 
-            <div class="key-insights">
-                <h2>Key Observations</h2>
-                <ul>
-                    <li>Major spike in weights observed around September 2024</li>
-                    <li>Significant variation in behavior between different entities</li>
-                    <li>Gradual stabilization trend towards the end of the observation period</li>
-                    <li>Notable divergence in patterns between highlighted entities (1810, 9988, and 700)</li>
-                </ul>
+                <div class="key-insights">
+                    <h2>Key Observations</h2>
+                    <ul>
+                        <li>Major spike in weights observed around September 2024</li>
+                        <li>Significant variation in behavior between different entities</li>
+                        <li>Gradual stabilization trend towards the end of the observation period</li>
+                        <li>Notable divergence in patterns between highlighted entities (1810, 9988, and 700)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 2 Content (Empty) -->
+        <div id="tab2" class="tab-content">
+            <div class="empty-tab-content">
+                <h2>Content Coming Soon</h2>
+                <p>This tab is currently under development. Please check back later for updates.</p>
+            </div>
+        </div>
+        
+        <!-- Tab 3 Content (Empty) -->
+        <div id="tab3" class="tab-content">
+            <div class="empty-tab-content">
+                <h2>Content Coming Soon</h2>
+                <p>This tab is currently under development. Please check back later for updates.</p>
             </div>
         </div>
     </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Show the specific tab content
+            document.getElementById(tabName).classList.add("active");
+            
+            // Add active class to the clicked button
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 </body>
 </html>
