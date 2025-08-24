@@ -265,15 +265,7 @@
                         <th>Company</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1</td><td>TENCENT HOLDINGS LTD</td></tr>
-                    <tr><td>5</td><td>MEITUAN</td></tr>
-                    <tr><td>12</td><td>JD.COM CLASS A INC</td></tr>
-                    <tr><td>3</td><td>XIAOMI CORP</td></tr>
-                    <tr><td>18</td><td>AGRICULTURAL BANK OF CHINA LTD H</td></tr>
-                    <tr><td>19</td><td>BEONE MEDICINES AG</td></tr>
-                    <tr><td>20</td><td>PETROCHINA LTD H</td></tr>
-                </tbody>
+                <tbody id="fxi-rank-tbody"></tbody>
             </table>
         </div>
         
@@ -443,6 +435,41 @@
             // Add active class to the clicked button
             evt.currentTarget.classList.add("active");
         }
+
+        // Dynamically populate FXI ranks table from texts/fxi_rank.txt
+        async function loadFxiRankTable() {
+            const tbody = document.getElementById('fxi-rank-tbody');
+            if (!tbody) return;
+            const desiredRanks = [1, 5, 12, 3, 18, 19, 20];
+            try {
+                const resp = await fetch('texts/fxi_rank.txt', { cache: 'no-store' });
+                if (!resp.ok) throw new Error('Failed to fetch fxi_rank.txt');
+                const text = await resp.text();
+                const rankToName = {};
+                text.split('\n').forEach(line => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return;
+                    const spaceIdx = trimmed.indexOf(' ');
+                    if (spaceIdx <= 0) return;
+                    const rank = parseInt(trimmed.slice(0, spaceIdx), 10);
+                    const name = trimmed.slice(spaceIdx + 1).trim();
+                    if (!Number.isNaN(rank) && name) {
+                        rankToName[rank] = name;
+                    }
+                });
+
+                const rows = desiredRanks.map(r => {
+                    const name = rankToName[r] || '-';
+                    return `<tr><td>${r}</td><td>${name}</td></tr>`;
+                }).join('');
+                tbody.innerHTML = rows;
+            } catch (e) {
+                // If fetch fails, show a fallback message
+                tbody.innerHTML = '<tr><td colspan="2">Failed to load FXI ranks.</td></tr>';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadFxiRankTable);
     </script>
 </body>
 </html>
