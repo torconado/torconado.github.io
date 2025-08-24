@@ -236,6 +236,14 @@
             color: #ddd;
             font-size: 1.2rem;
         }
+
+        /* FXI rank row highlights */
+        .fxi-row-red {
+            background-color: #fdecea; /* light red */
+        }
+        .fxi-row-green {
+            background-color: #eafaf1; /* light green */
+        }
     </style>
 </head>
 <body>
@@ -480,9 +488,10 @@
                     }
                 });
 
-                const rows = desiredRanks.map(r => {
+                const rows = desiredRanks.map((r, idx) => {
                     const name = rankToName[r] || '-';
-                    return `<tr><td>${r}</td><td>${name}</td></tr>`;
+                    const cls = idx < 3 ? 'fxi-row-red' : 'fxi-row-green';
+                    return `<tr class="${cls}"><td>${r}</td><td>${name}</td></tr>`;
                 }).join('');
                 tbody.innerHTML = rows;
             } catch (e) {
