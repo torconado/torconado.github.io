@@ -441,10 +441,32 @@
             const tbody = document.getElementById('fxi-rank-tbody');
             if (!tbody) return;
             const desiredRanks = [1, 5, 12, 3, 18, 19, 20];
+            // Try multiple URL options to support local file viewing and GitHub Pages
+            const urlsToTry = [];
+            urlsToTry.push('texts/fxi_rank.txt');
+            urlsToTry.push('./texts/fxi_rank.txt');
+            if (location.protocol === 'http:' || location.protocol === 'https:') {
+                urlsToTry.push(`${location.origin}/texts/fxi_rank.txt`);
+            }
+            urlsToTry.push('https://torconado.github.io/texts/fxi_rank.txt');
+
+            let text = null;
+            let lastError = null;
+            for (const url of urlsToTry) {
+                try {
+                    const resp = await fetch(url, { cache: 'no-store' });
+                    if (resp.ok) {
+                        text = await resp.text();
+                        break;
+                    } else {
+                        lastError = new Error(`HTTP ${resp.status} for ${url}`);
+                    }
+                } catch (e) {
+                    lastError = e;
+                }
+            }
             try {
-                const resp = await fetch('texts/fxi_rank.txt', { cache: 'no-store' });
-                if (!resp.ok) throw new Error('Failed to fetch fxi_rank.txt');
-                const text = await resp.text();
+                if (!text) throw lastError || new Error('Unknown fetch error');
                 const rankToName = {};
                 text.split('\n').forEach(line => {
                     const trimmed = line.trim();
@@ -464,7 +486,8 @@
                 }).join('');
                 tbody.innerHTML = rows;
             } catch (e) {
-                // If fetch fails, show a fallback message
+                // If fetch fails, show a fallback message and log error for debugging
+                console.error('Failed to load FXI ranks:', e);
                 tbody.innerHTML = '<tr><td colspan="2">Failed to load FXI ranks.</td></tr>';
             }
         }
